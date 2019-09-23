@@ -1,0 +1,29 @@
+# Input/Output file locations
+output_dir: "output"
+inter_dir: "data/intermediate_output"
+data_dir: "data"
+source_dir: "src"
+#version: "19.09"
+
+# Open Targets Google Cloud file locations
+gene_index: "gs://open-targets-data-releases/19.09/..."
+drug_index: "gs://open-targets-data-releases/19.09/..."
+expression_index: "s://open-targets-data-releases/19.09/..."
+OT_associations: "gs://open-targets-data-releases/19.09/output/19.09_association_data.json.gz"
+gene_mapfile: "gs://open-targets-data-releases/19.09/output/19.09_target_list.json.gz"
+cosmic_evidence: "gs://open-targets-data-releases/19.09/input/evidence-files/cosmic-2019-08-05.json.gz"
+fda_aes_by_target: "gs://open-targets-data-releases/19.09/..."
+# Open Targets Google drive spreadsheets location information
+# Enriched GO & Reactome terms
+enriched_terms:
+  gkey: "1uyQu5Lnv4D-2gCNB36QIgLX_jVqtNlYEIN2CLF6yT4k"
+  go_gid: "2145246125"
+  reactome_gid: "1814759579"
+# Manually curated target safety data
+known_safety:
+  gkey: "1EvpcnUkDASUNoBU5PzQPGD5YtZxh7cgotr2MqClJ7t0"
+  adr_gid: "1760619926"
+  sri_gid: "650742396"
+  ubr_gid: "1774810192"
+  efo_gid: "1717378859"
+  ref_gid: "1223815020"

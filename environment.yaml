@@ -1,0 +1,17 @@
+# conda env create -n target_safety --file environment.yaml
+channels:
+  - bioconda
+  - conda-forge
+# ALSO NEED gsutil & gzip
+dependencies:
+  - python=3
+  - snakemake
+  - pandas>=0.24
+  - wget
+  - git
+  - unzip
+  - jq
+  - r
+  - r-data.table
+  - r-jsonlite
+  - r-tidyverse
