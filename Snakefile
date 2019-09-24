@@ -5,7 +5,7 @@ inter_dir = config["inter_dir"]
 data_dir= config["data_dir"]
 source_dir = config["source_dir"]
 
-#from snakemake.remote.GS import RemoteProvider as GSRemoteProvider
+from snakemake.remote.GS import RemoteProvider as GSRemoteProvider
 
 #===============================================================================
 rule all:
@@ -270,52 +270,48 @@ rule ensembl_paralogues_download:
         "wget -O {output} \'http://www.ensembl.org/biomart/martservice?query=<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE Query><Query virtualSchemaName = \"default\" formatter = \"TSV\" header = \"0\" uniqueRows = \"0\" count = \"\" datasetConfigVersion = \"0.6\" ><Dataset name = \"hsapiens_gene_ensembl\" interface = \"default\" ><Filter name = \"with_hsapiens_paralog\" excluded = \"0\"/><Attribute name = \"ensembl_gene_id\" /> <Attribute name = \"hsapiens_paralog_ensembl_gene\" /> <Attribute name = \"hsapiens_paralog_orthology_type\" /><Attribute name = \"hsapiens_paralog_perc_id\" /><Attribute name = \"hsapiens_paralog_perc_id_r1\" /></Dataset></Query>\'"
 #===============================================================================
 # Open Targets google cloud files download
-# snakemake functions not working for some reason...
+
+# snakemake GS functions not working for some reason for me...decided to use gsutil.
+# I've left commented out snippet below in case someone can fix it:
 # rule cosmic_evidence_download:
 #     input:
 #         GSRemoteProvider().remote(cosmic_evidence)
 #     output:
-#         data_dir + "/cosmic_evidence.json"
+#         data_dir + "/OT_data/cosmic_evidence.json"
 #     shell:
 #         "cat {input} | gunzip > {output}"
 
-# INCLUDE THE RULES FOR THE GENE, DRUG AND EXPRESSION INDICES WHEN WE KNOW THE LOCATIONS
-# maybe also rule for adr_by_target.json processed faers data output?
-# FOR NOW INDICS DOWNLOADED USING THE ELASTICDUMP COMMAND, e.g.:
+# elasticsearch indices:
+# Currently pointing to ot-snapshots folder, add '| gunzip' to the shell commands if these are zipped & moved to the ot releases output folder
+# Alternative elasticdump command (on running server) if indices not available:
 # elasticdump --input=http://localhost:9200/19.09_gene-data --output=19.09_gene-data.json --type=data --limit 10000 --sourceOnly
-# rule gene_index_download:
-#     params:
-#         location=config['drug_index']
-#     output:
-#         data_dir + "/OT_data/gene_index.json"
-#     shell:
-#         "gsutil cat {gene_index} | gunzip | jq -c '.' > {output}"
-#
-# rule drug_index_download:
-#     params:
-#         location=config['drug_index']
-#     output:
-#         data_dir + "/OT_data/drug_index.json"
-#     shell:
-#         "gsutil cat {drug_index} | gunzip | jq -c '.' > {output}"
-#
-# rule expression_index_download:
-#     params:
-#         location=config['expression_index']
-#     output:
-#         data_dir + "/OT_data/expression_index.json"
-#     shell:
-#         "gsutil cat {expression_index} | gunzip | jq -c '.' > {output}"
 
-# rule fda_aes_by_target_download: WHERE WILL THESE BE EVENTUALLY?
-# alternatively add rules for generating processed openfda data file?
-#     params:
-#         location=config['fda_aes_by_target']
-#     output:
-#         data_dir + "/OT_data/fda_aes_by_target.json"
-#     shell:
-#         "gsutil cat {fda_aes_by_target} > {output}" # doublecheck this
+rule gene_index_download:
+    params:
+        location=config['drug_index']
+    output:
+        data_dir + "/OT_data/gene_index.json"
+    shell:
+        #"gsutil cat {params.location} | gunzip > {output}"
+        "gsutil cat {params.location} > {output}"
 
+rule drug_index_download:
+    params:
+        location=config['drug_index']
+    output:
+        data_dir + "/OT_data/drug_index.json"
+    shell:
+        "gsutil cat {params.location} > {output}"
+
+rule expression_index_download:
+    params:
+        location=config['expression_index']
+    output:
+        data_dir + "/OT_data/expression_index.json"
+    shell:
+        "gsutil cat {params.location} > {output}"
+
+# other OT data files
 rule gene_mapfile_download:
     params:
         location=config['gene_mapfile']
@@ -339,3 +335,11 @@ rule cosmic_evidence_download:
         data_dir + "/OT_data/cosmic_evidence.json"
     shell:
         "gsutil cat {params.location} | gunzip > {output}"
+
+rule fda_aes_by_target_download:
+    params:
+        location=config['fda_aes_by_target']
+    output:
+        data_dir + "/OT_data/fda_aes_by_target.json"
+    shell:
+        "gsutil cat {params.location}/part* > {output}" # will probably not need the '/part*' eventually

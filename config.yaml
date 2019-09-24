@@ -6,13 +6,13 @@ source_dir: "src"
 #version: "19.09"
 
 # Open Targets Google Cloud file locations
-gene_index: "gs://open-targets-data-releases/19.09/..."
-drug_index: "gs://open-targets-data-releases/19.09/..."
-expression_index: "s://open-targets-data-releases/19.09/..."
+gene_index: "gs://ot-snapshots/jsonl/19.09/jsonl/19.09_gene-data.json"
+drug_index: "gs://ot-snapshots/jsonl/19.09/jsonl/19.09_drug-data.json"
+expression_index: "gs://ot-snapshots/jsonl/19.09/jsonl/19.09_expression-data.json"
 OT_associations: "gs://open-targets-data-releases/19.09/output/19.09_association_data.json.gz"
 gene_mapfile: "gs://open-targets-data-releases/19.09/output/19.09_target_list.json.gz"
 cosmic_evidence: "gs://open-targets-data-releases/19.09/input/evidence-files/cosmic-2019-08-05.json.gz"
-fda_aes_by_target: "gs://open-targets-data-releases/19.09/..."
+fda_aes_by_target: "gs://ot-snapshots/eirini/out_190917/agg_by_target"
 # Open Targets Google drive spreadsheets location information
 # Enriched GO & Reactome terms
 enriched_terms:
