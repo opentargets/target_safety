@@ -5,7 +5,7 @@ inter_dir = config["inter_dir"]
 data_dir= config["data_dir"]
 source_dir = config["source_dir"]
 
-from snakemake.remote.GS import RemoteProvider as GSRemoteProvider
+#from snakemake.remote.GS import RemoteProvider as GSRemoteProvider
 
 #===============================================================================
 rule all:
