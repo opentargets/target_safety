@@ -107,8 +107,8 @@ def collect_drug_label_info(drug_index, bbox_text=True):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-drug_index", help="Open Targets drug index contents")
-	parser.add_argument("-o","--output", help="Output json filename")
+	parser.add_argument("-drug_index", help="Open Targets drug index contents", required=True)
+	parser.add_argument("-o","--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 

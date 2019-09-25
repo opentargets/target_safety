@@ -151,12 +151,12 @@ def generate_known_safety_json(filename_adr,filename_sri,filename_ubr,filename_e
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-adr","--adverse_effects", help="tsv of manually curated adverse effects per target")
-    parser.add_argument("-sri","--safety_risk_info", help="tsv of manually curated safety risk information per target")
-    parser.add_argument("-ubr","--uberon_mapping", help="tsv with uberon mapping for tissues in adverse effect and safety info spreadsheets")
-    parser.add_argument("-efo","--efo_mapping", help="tsv with efo mapping for terms in adverse effect spreadsheet")
-    parser.add_argument("-ref","--references", help="tsv with reference information for entries in adverse effect and safety info spreadsheets")
-    parser.add_argument("-o","--output", help="Output json filename")
+    parser.add_argument("-adr","--adverse_effects", help="tsv of manually curated adverse effects per target", required=True)
+    parser.add_argument("-sri","--safety_risk_info", help="tsv of manually curated safety risk information per target", required=True)
+    parser.add_argument("-ubr","--uberon_mapping", help="tsv with uberon mapping for tissues in adverse effect and safety info spreadsheets", required=True)
+    parser.add_argument("-efo","--efo_mapping", help="tsv with efo mapping for terms in adverse effect spreadsheet", required=True)
+    parser.add_argument("-ref","--references", help="tsv with reference information for entries in adverse effect and safety info spreadsheets", required=True)
+    parser.add_argument("-o","--output", help="Output json filename", required=True)
     args = parser.parse_args()
     print(args)
 

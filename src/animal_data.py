@@ -24,8 +24,8 @@ def collect_animal_data(gene_index):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-gene_index", help="Open Targets gene index contents")
-	parser.add_argument("-o", "--output", help="Output json filename")
+	parser.add_argument("-gene_index", help="Open Targets gene index contents", required=True)
+	parser.add_argument("-o", "--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	mouse_phenotypes,ortholog = collect_animal_data(args.gene_index)

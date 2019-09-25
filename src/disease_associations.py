@@ -56,10 +56,10 @@ def rare_diseases_from_file(rare_diseases_file):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-OT_associations", help="Open Targets associations filename.")
-	parser.add_argument("-cosmic", help="Latest COSMIC evidence file submitted to Open Targets.")
-	parser.add_argument("-rare","--rare_diseases", help="Text file with rare diseases list (EFO terms).")
-	parser.add_argument("-o","--output", help="Output json filename")
+	parser.add_argument("-OT_associations", help="Open Targets associations filename.", required=True)
+	parser.add_argument("-cosmic", help="Latest COSMIC evidence file submitted to Open Targets.", required=True)
+	parser.add_argument("-rare","--rare_diseases", help="Text file with rare diseases list (EFO terms).", required=True)
+	parser.add_argument("-o","--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	# read in rare diseases list

@@ -18,8 +18,8 @@ def get_paralogues(paralogue_file):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-i", "--input", help="Ensembl human paralogues tsv filename")
-	parser.add_argument("-o", "--output", help="Output json filename")
+	parser.add_argument("-i", "--input", help="Ensembl human paralogues tsv filename", required=True)
+	parser.add_argument("-o", "--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	high_perc_paralogues = get_paralogues(args.input)

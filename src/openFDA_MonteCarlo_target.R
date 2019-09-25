@@ -4,6 +4,9 @@ library(jsonlite)
 
 # Input files from command line arguments
 args <- commandArgs(trailingOnly = TRUE)
+if (length(args)==0) {
+  stop("The following arguments need to be supplied:\n1) openFDA FAERS processed output json file(Open Targets pipeline, by target),\n2) output csv file name.\ne.g. Rscript openFDA_MonteCarlo_target.R fda_aes_by_target.json output.csv", call.=FALSE)
+  }
 openFDA_data_process_output <- args[1]
 output_csv <- args[2]
 

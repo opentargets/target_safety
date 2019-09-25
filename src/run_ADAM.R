@@ -1,6 +1,9 @@
 library(data.table)
 
 args <- commandArgs(trailingOnly = TRUE)
+if (length(args)==0) {
+  stop("The following arguments need to be supplied:\n1) ADAM repository folder (from https://github.com/francescojm/ADAM),\n2) binary dependency score matrix.\ne.g. Rscript run_ADAM.R src/ADAM binary_dep_scores.tsv", call.=FALSE)
+  }
 ADAM <- args[1]
 binaryDepScores <- args[2]
 output <- args[3]

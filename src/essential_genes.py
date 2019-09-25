@@ -85,12 +85,12 @@ def make_cf_dict(sangerfile,broadfile,bagelfile,ogeefile,hgnc_to_ensembl):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-sanger", help="File with core fitness genes based on Sanger binary dependency scores (https://score.depmap.sanger.ac.uk/downloads)")
-	parser.add_argument("-broad", help="File with core fitness genes based on Broad binary dependency scores (https://score.depmap.sanger.ac.uk/downloads)")
-	parser.add_argument("-bagel", help="File with core fitness genes from Toronto KnockOut Library (http://tko.ccbr.utoronto.ca)")
-	parser.add_argument("-ogee", help="File with consolidated human core fitness genes from OGEE (http://ogee.medgenius.info/browse/Homo sapiens)")
-	parser.add_argument("-gene_mapfile", help="Open Targets HGNC gene symbol to ENSEMBL gene id json file")
-	parser.add_argument("-o", "--output", help="Output json filename")
+	parser.add_argument("-sanger", help="File with core fitness genes based on Sanger binary dependency scores (https://score.depmap.sanger.ac.uk/downloads)", required=True)
+	parser.add_argument("-broad", help="File with core fitness genes based on Broad binary dependency scores (https://score.depmap.sanger.ac.uk/downloads)", required=True)
+	parser.add_argument("-bagel", help="File with core fitness genes from Toronto KnockOut Library (http://tko.ccbr.utoronto.ca)", required=True)
+	parser.add_argument("-ogee", help="File with consolidated human core fitness genes from OGEE (http://ogee.medgenius.info/browse/Homo sapiens)", required=True)
+	parser.add_argument("-gene_mapfile", help="Open Targets HGNC gene symbol to ENSEMBL gene id json file", required=True)
+	parser.add_argument("-o", "--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	hgnc_to_ensembl = Ensembl_from_HGNC(args.gene_mapfile)

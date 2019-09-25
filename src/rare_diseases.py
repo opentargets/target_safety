@@ -55,9 +55,9 @@ def collect_rare_diseases(associations_file,orphanet):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-OT_associations", help="Open Targets associations filename.")
-	parser.add_argument("-efo","--efo_obo", help="Latest release of EFO in OBO format.")
-	parser.add_argument("-o","--output", help="Output text filename")
+	parser.add_argument("-OT_associations", help="Open Targets associations filename.", required=True)
+	parser.add_argument("-efo","--efo_obo", help="Latest release of EFO in OBO format.", required=True)
+	parser.add_argument("-o","--output", help="Output text filename", required=True)
 	args = parser.parse_args()
 
 	orphanet = get_orphanet_xrefs(args.efo_obo)

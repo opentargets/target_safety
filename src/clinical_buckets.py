@@ -31,15 +31,15 @@ def clinical_buckets(drug_index,known_safety_adr,known_safety_sri,known_safety_u
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-drug_index", help="Open Targets drug index contents")
-	parser.add_argument("-adr","--adverse_effects", help="tsv of manually curated adverse effects per target")
-	parser.add_argument("-sri","--safety_risk_info", help="tsv of manually curated safety risk information per target")
-	parser.add_argument("-ubr","--uberon_mapping", help="tsv with uberon mapping for tissues in adverse effect and safety info spreadsheets")
-	parser.add_argument("-efo","--efo_mapping", help="tsv with efo mapping for terms in adverse effect spreadsheet")
-	parser.add_argument("-ref","--references", help="tsv with reference information for entries in adverse effect and safety info spreadsheets")
-	parser.add_argument("-fda_aes","--fda_aes_by_target", help="significant openFDA adverse events PER TARGET")
-	parser.add_argument("-gene_mapfile", help="Open Targets HGNC gene symbol to ENSEMBL gene id json file")
-	parser.add_argument("-o","--output", help="Output json filename")
+	parser.add_argument("-drug_index", help="Open Targets drug index contents", required=True)
+	parser.add_argument("-adr","--adverse_effects", help="tsv of manually curated adverse effects per target", required=True)
+	parser.add_argument("-sri","--safety_risk_info", help="tsv of manually curated safety risk information per target", required=True)
+	parser.add_argument("-ubr","--uberon_mapping", help="tsv with uberon mapping for tissues in adverse effect and safety info spreadsheets", required=True)
+	parser.add_argument("-efo","--efo_mapping", help="tsv with efo mapping for terms in adverse effect spreadsheet", required=True)
+	parser.add_argument("-ref","--references", help="tsv with reference information for entries in adverse effect and safety info spreadsheets", required=True)
+	parser.add_argument("-fda_aes","--fda_aes_by_target", help="significant openFDA adverse events PER TARGET", required=True)
+	parser.add_argument("-gene_mapfile", help="Open Targets HGNC gene symbol to ENSEMBL gene id json file", required=True)
+	parser.add_argument("-o","--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 

@@ -10,8 +10,8 @@ def make_dict_by_target(x):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-i","--input", help="significant openFDA adverse events PER TARGET")
-	parser.add_argument("-o","--output", help="Output json filename")
+	parser.add_argument("-i","--input", help="significant openFDA adverse events PER TARGET", required=True)
+	parser.add_argument("-o","--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	aes_df = pd.read_csv(args.input)

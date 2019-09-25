@@ -52,8 +52,8 @@ def get_high_expression_in_safety_tissues_backup(expression_index):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-expression_index", help="Open Targets gene expression index contents")
-	parser.add_argument("-o", "--output", help="Output json filename")
+	parser.add_argument("-expression_index", help="Open Targets gene expression index contents", required=True)
+	parser.add_argument("-o", "--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	high_tissue_expression = get_high_expression_in_safety_tissues(args.expression_index)

@@ -5,13 +5,13 @@ from helpers import *
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-clinical_findings", help="Target safety clinical_buckets.py output.")
-    parser.add_argument("-tissue_expression", help="Target safety tissue_expression.py output.")
-    parser.add_argument("-bio_function", help="Target safety bio_function_buckets.py output.")
-    parser.add_argument("-disease_associations", help="Target safety disease_associations.py output.")
-    parser.add_argument("-animal_data", help="Target safety animal_data.py output.")
-    parser.add_argument("-potential_off_targets", help="Target safety paralogues.py output.")
-    parser.add_argument("-o","--output", help="Output json filename")
+    parser.add_argument("-clinical_findings", help="Target safety clinical_buckets.py output.", required=True)
+    parser.add_argument("-tissue_expression", help="Target safety tissue_expression.py output.", required=True)
+    parser.add_argument("-bio_function", help="Target safety bio_function_buckets.py output.", required=True)
+    parser.add_argument("-disease_associations", help="Target safety disease_associations.py output.", required=True)
+    parser.add_argument("-animal_data", help="Target safety animal_data.py output.", required=True)
+    parser.add_argument("-potential_off_targets", help="Target safety paralogues.py output.", required=True)
+    parser.add_argument("-o","--output", help="Output json filename", required=True)
     args = parser.parse_args()
 
     clinical_findings = read_json_file(args.clinical_findings)

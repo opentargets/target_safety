@@ -57,10 +57,10 @@ def flag_genes(gene_index, flagged_GO_terms_tsv, flagged_Reactome_terms_tsv):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-gene_index", help="Open Targets gene index contents")
-	parser.add_argument("-go", help="filename of list with enriched GO terms to flag")
-	parser.add_argument("-react", help="filename of list with enriched Reactome terms to flag")
-	parser.add_argument("-o", "--output", help="Output json filename")
+	parser.add_argument("-gene_index", help="Open Targets gene index contents", required=True)
+	parser.add_argument("-go", help="filename of list with enriched GO terms to flag", required=True)
+	parser.add_argument("-react", help="filename of list with enriched Reactome terms to flag", required=True)
+	parser.add_argument("-o", "--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	flagged_genes = flag_genes(args.gene_index, args.go, args.react)

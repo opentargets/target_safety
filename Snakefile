@@ -8,7 +8,7 @@ source_dir = config["source_dir"]
 #from snakemake.remote.GS import RemoteProvider as GSRemoteProvider
 
 #===============================================================================
-rule all:
+rule target_safety:
     input:
         clf = inter_dir + "/clinical_findings.json",
         tis = inter_dir + "/high_tissue_expression.json",
@@ -90,7 +90,7 @@ rule FDA_AEs_by_target:
     shell:
         "python {source_dir}/FDA_AEs_per_target.py -i {input} -o {output}"
 
-rule significant_AEs_by_target_step2:
+rule significant_AEs_by_target_MonteCarlo:
     input:
         data_dir + "/OT_data/fda_aes_by_target.json"
     output:
@@ -255,7 +255,7 @@ rule animal_data:
         "python {source_dir}/animal_data.py -gene_index {input} -o {output}"
 
 #===============================================================================
-rule potential_off_targets_paralogues:
+rule potential_off_targets:
     input:
         data_dir + "/external_downloads/ensembl_paralogues.tsv"
     output:
@@ -288,7 +288,7 @@ rule ensembl_paralogues_download:
 
 rule gene_index_download:
     params:
-        location=config['drug_index']
+        location=config['gene_index']
     output:
         data_dir + "/OT_data/gene_index.json"
     shell:

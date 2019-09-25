@@ -9,9 +9,9 @@ def download_GoogleSpreadSheet(gkey,gid,output_filename):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-gkey", help="Google spreadsheet key")
-    parser.add_argument("-gid", help="Google spreadsheet gid")
-    parser.add_argument("-o", "--output", help="Output filename")
+    parser.add_argument("-gkey", help="Google spreadsheet key", required=True)
+    parser.add_argument("-gid", help="Google spreadsheet gid", required=True)
+    parser.add_argument("-o", "--output", help="Output filename", required=True)
     args = parser.parse_args()
 
     download_GoogleSpreadSheet(args.gkey,args.gid,args.output)
