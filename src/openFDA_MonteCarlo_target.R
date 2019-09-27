@@ -55,6 +55,6 @@ FDAdata <- FDAdata[FDAdata$significant ==TRUE,] %>% drop_na()
 # keep only the following columns
 myvars <-c("target_id", "reaction_reactionmeddrapt", "A", "llr", "critval")
 output <- FDAdata[myvars]
-colnames(output ) <- c("target_id", "event", "count", "llr", "critval")
+colnames(output ) <- c("target_id", "event", "report_count", "llr", "critval")
 
 write.csv(output,file=output_csv,row.names=FALSE)

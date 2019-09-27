@@ -16,14 +16,12 @@ def clinical_buckets(drug_index,known_safety_adr,known_safety_sri,known_safety_u
 	hgnc_to_ensembl = Ensembl_from_HGNC(gene_mapfile)
 	known_target_safety = dict((hgnc_to_ensembl[key], value) for (key, value) in known_target_safety.items())
 
-	# Get openFDA adverse event aggregated information
-	aes_df = pd.read_csv(fda_aes_by_target)
-	AEs_per_target = aes_df.groupby(['target_id']).apply(make_dict_by_target).to_dict()
+	# Get openFDA significant adverse event per target information
+	AEs_per_target = get_AEs_per_target(fda_aes_by_target)
 
 	# Combine everything into one dictionary using Ensembl Gene IDs as the keys.
 	combined = {'drug_label_info':drug_label_info,'Bucket_C3:known_target_safety':known_target_safety,'Bucket_C4:openFDA_AEs':AEs_per_target}
 	clinical_findings = combine_dicts_genekey(combined)
-	#print(clinical_findings)
 
 	return(clinical_findings)
 
