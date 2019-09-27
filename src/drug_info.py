@@ -53,7 +53,7 @@ def get_drug_info(drug_index, bbox_text):
             wreason = annot.get('withdrawn_reason','')
             wclass = annot.get('withdrawn_class','')
             wcountry = annot.get('withdrawn_country',[])
-            wyear = annot.get('withdrawn_year',9999)
+            wyear = annot.get('withdrawn_year','')
             drug_annot[drugid]["withdrawn_reason"]= wreason
             drug_annot[drugid]["withdrawn_class"]= wclass
             drug_annot[drugid]["withdrawn_country"]= wcountry

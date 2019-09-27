@@ -43,9 +43,9 @@ def get_high_expression_in_safety_tissues_backup(expression_index):
 			for tissue in tissues:
 				if tissue['label'] in safety_tissues:
 					if tissue['rna']['level']==3:
-						safety_express.setdefault(ensembl_id, {}).setdefault('Bucket_T1:high_expression_in_safety_organs',[]).append(tissue['label'])
+						safety_express.setdefault(ensembl_id, {}).setdefault('Bucket_T1:high_expression_in_safety_tissues',[]).append(tissue['label'])
 					elif any(cell['level']==3 for cell in tissue['protein']['cell_type']):
-						safety_express.setdefault(ensembl_id, {}).setdefault('Bucket_T1:high_expression_in_safety_organs',[]).append(tissue['label'])
+						safety_express.setdefault(ensembl_id, {}).setdefault('Bucket_T1:high_expression_in_safety_tissues',[]).append(tissue['label'])
 
 	return(safety_express)
 
