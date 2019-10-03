@@ -23,7 +23,7 @@ gcloud auth login
 1. For **complete output**, run:
 `snakemake` or `snakemake target_safety`
 
-This produces the Open Targets target safety annotation file called `target_safety.json` in the output folder. This json file includes all information collected for each of the OT safety buckets (TODO: include documentation link). It is produced by calling the script `target_safety.py` which merges the output from the six different scripts `clinical_buckets.py`, `tissue_expression.py`, `bio_function_buckets.py`, `disease_associations.py`, `animal_data.py` and `paralogues.py` into a single json that uses ENSEMBL gene ids as keys.   
+This produces the Open Targets target safety annotation file called `target_safety.json` in the output folder. This json file includes all information collected for each of the OT safety buckets (short overview [here](https://drive.google.com/open?id=17XCLxzG5qSg_tgR3blwgwbKbPDxYRhpZN5OZ9rHKX4E)). It is produced by calling the script `target_safety.py` which merges the output from the six different scripts `clinical_buckets.py`, `tissue_expression.py`, `bio_function_buckets.py`, `disease_associations.py`, `animal_data.py` and `paralogues.py` into a single json that uses ENSEMBL gene ids as keys.   
 
 2. To run **one** step specify that rule, e.g. for the `clinical_findings` step:
 ```
@@ -50,7 +50,7 @@ potential_off_targets_paralogues
   
   - `known_target_safety`: Calls the script `known_target_safety.py` which parses the manually curated spreadsheets (from OT google drive) with targets with known safety risk information. Produces the file `known_target_safety.json` in the intermediate output folder (not produced unless rule explicitly called).
     
-  - `significant_AEs_by_target_MonteCarlo`: Calls the script `openFDA_MonteCarlo_target.R` that takes as input a pre-processed json file with the openFDA adverse event data (FAERS) (Open Targets filters applied, see relevant [documentation](https://github.com/opentargets/platform-etl-openfda-faers)) and calculates the significance of each event occurring for each **target** using a modified version of the openFDA's own [LRT method](https://openfda.shinyapps.io/LRTest/_w_c5c2d04d/lrtmethod.pdf). Produces the file `significant_AEs_by_target.csv` in the data folder (always produced, as it is required for the `clinical_findings` section).
+  - `significant_AEs_by_target_MonteCarlo`: Calls the script `openFDA_MonteCarlo_target.R` that takes as input a pre-processed json file with the openFDA adverse event data (FAERS) (Open Targets filters applied, see relevant [github repository](https://github.com/opentargets/platform-etl-openfda-faers)) and calculates the significance of each event occurring for each **target** using a modified version of the openFDA's own [LRT method](https://openfda.shinyapps.io/LRTest/_w_c5c2d04d/lrtmethod.pdf). Produces the file `significant_AEs_by_target.csv` in the data folder (always produced, as it is required for the `clinical_findings` section).
   
   - `FDA_AEs_by_target`: Calls the script `FDA_AEs_per_target.py` that reformats the csv output from the rule `significant_AEs_by_target_MonteCarlo` into a json file with ENSEMBL gene ids as keys and sorts the events by the event log-likelihood ratio (llr) in descending order. Produces the file `adverse_effects_per_target.json` in the intermediate output folder (not produced unless rule explicitly called).
 
@@ -93,6 +93,7 @@ potential_off_targets_paralogues
       drug_index_download
       expression_index_download
       gene_mapfile_download
+      disease_mapfile_download
       OT_associations_download
       cosmic_evidence_download
       fda_aes_by_target_download
