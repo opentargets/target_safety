@@ -35,10 +35,11 @@ There are 6 main intermediate rules that produce corresponding json files in the
 ```
 clinical_findings
 tissue_expression
-biofunction_buckets
+essential_genes
+pathways
 disease_associations
 animal_data
-potential_off_targets_paralogues
+potential_off_targets
 ```
 - `clinical_findings`
 
@@ -57,20 +58,19 @@ potential_off_targets_paralogues
 - `tissue_expression`
 
   Calls the script `tissue_expression.py` which parses the Open Targets expression index to flag high expression (*level=3*) in one of the organs marked as important for preliminary safety studies (*endocrine gland, exocrine gland, intestine, sense organ, heart, kidney, lung, reproductive organ, immune organ, brain*) (list to be refined).  Produces a json file called `high_tissue_expression.json` in the intermediate output folder.
-- `biofunction_buckets`
-
-  Calls the script `bio_function_buckets.py` to collect biological function information for the target that might be relevant to its safety as a drug target. It calls functions from `essential_genes.py` and `flag_GO_React_terms.py` and produces a json file called `biofunction.json` in the intermediate output folder. 
   
-  Similar to the `clinical_findings` rule, you can run each step separately to produce more intermediate output files separately. The corresponding rules are the following:
-  
-  - `flag_essential_genes`: Calls the script `essential_genes.py` which combines the lists of essential genes derived from the [Cancer Dependency Map](https://score.depmap.sanger.ac.uk) (output from script `run_ADAM.R`), the  [Toronto Knockout Library](http://tko.ccbr.utoronto.ca/) (simple download of BAGEL list) and [OGEE](http://ogee.medgenius.info/browse/) (script consolidates results from all human datasets in the same manner as OGEE). Produces a json file called `essential_genes.json` in the intermediate output folder (not produced unless rule explicitly called).
+- `essential_genes`: Calls the script `essential_genes.py` which combines the lists of essential genes derived from the [Cancer Dependency Map](https://score.depmap.sanger.ac.uk) (output from script `run_ADAM.R`), the  [Toronto Knockout Library](http://tko.ccbr.utoronto.ca/) (simple download of BAGEL list) and [OGEE](http://ogee.medgenius.info/browse/) (script consolidates results from all human datasets in the same manner as OGEE). Produces a json file called `essential_genes.json` in the intermediate output folder (not produced unless rule explicitly called).
   
   - `run_ADAM_sanger`: Calls the script `run_ADAM.py` (which uses functions from the [AdAM](https://github.com/francescojm/ADAM) repository) to calculate which genes should be flagged as core fitness using the [Sanger binary dependency scores matrix](https://score.depmap.sanger.ac.uk/downloads). Produces the txt file `coreFitnessADAM_Sanger.txt` with this list of essential genes (always produced, required for `biofunction_buckets`).
   
   - `run_ADAM_broad`: Calls the script `run_ADAM.py` (which uses functions from the [AdAM](https://github.com/francescojm/ADAM) repository) to calculate which genes should be flagged as core fitness using the [Broad binary dependency scores matrix](https://score.depmap.sanger.ac.uk/downloads). Produces the txt file `coreFitnessADAM_Broad.txt` with this list of essential genes (always produced, required for `biofunction_buckets`).
+
+- `pathways`
+
+  Calls the script `pathways.py` to collect information on processes or pathways that the target is involved in and that might be relevant to its safety as a drug target. It calls functions from `flag_GO_React_terms.py` and produces a json file called `pathways.json` in the intermediate output folder. 
   
   - `flag_enriched_terms`: Calls the script `flag_GO_React_terms.py` which collects the lists of the enriched (GSE) GO and Reactome terms that are associated with different target safety questions from the OT spreadsheets (OT google drive) and then it parses the OT gene index to flag a gene if it is annotated with one of these terms. Produces a json file called `flagged_terms.json` in the intermediate output folder (not produced unless rule explicitly called).
-
+  
 - `disease_associations`: 
 
   Calls the script `disease_associations.py` which parses the Open Targets associations file and the list of rare diseases (output from `rare_diseases.py`) to collect the following information on the diseases which are highly associated (>= 0.75 overall association score, direct associations only) with each target: (i) therapeutic areas these diseases belong to, (ii) whether they are marked as a rare disease. It also parses the OT cosmic evidence file to flag targets that are marked as cancer genes from [COSMIC](https://cancer.sanger.ac.uk/cosmic). Produces a json file called `disease_associations.json` in the intermediate output folder.
@@ -79,7 +79,7 @@ potential_off_targets_paralogues
   
 - `animal_data`
   
-  Calls the script `animal_data.py` to parse the OT gene index and extract the following information: (i) The mouse model MGI ids for any available knockout mouse models for this target, (ii) For which among the species among the 'clinically relevant species list' (currently *human, mouse, pig, dog, macaque, rat, guinea pig, rabbit and chimpanzee*; list needs refinement) do we have ortholog information already in Open Targets. 
+  Calls the script `animal_data.py` to parse the OT gene index and extract the following information for the section "Model organisms and Comparative Genomics": (i) The mouse model MGI ids for any available knockout mouse models for this target, (ii) For which among the species among the 'clinically relevant species list' (currently *human, mouse, pig, dog, macaque, rat, guinea pig, rabbit and chimpanzee*; list needs refinement) do we have ortholog information already in Open Targets. 
   
 - `potential_off_targets`
 

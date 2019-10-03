@@ -12,14 +12,15 @@ rule target_safety:
     input:
         clf = inter_dir + "/clinical_findings.json",
         tis = inter_dir + "/high_tissue_expression.json",
-        biof = inter_dir + "/biofunction.json",
+        ess = inter_dir + "/essential_genes.json",
+        path = inter_dir + "/pathways.json",
         dasc = inter_dir + "/disease_associations.json",
         anim = inter_dir + "/animal_data.json",
         par = inter_dir + "/high_perc_paralogues.json"
     output:
         output_dir + "/target_safety.json"
     shell:
-        "python {source_dir}/target_safety.py -clinical_findings {input.clf} -tissue_expression {input.tis} -bio_function {input.biof} -disease_associations {input.dasc} -animal_data {input.anim} -potential_off_targets {input.par} -o {output}"
+        "python {source_dir}/target_safety.py -clinical_findings {input.clf} -tissue_expression {input.tis} -essential_genes {input.ess} -pathways {input.path} -disease_associations {input.dasc} -animal_data {input.anim} -potential_off_targets {input.par} -o {output}"
 #===============================================================================
 rule clinical_findings:
     input:
@@ -109,23 +110,7 @@ rule tissue_expression:
         "python {source_dir}/tissue_expression.py -expression_index {input} -o {output}"
 
 #===============================================================================
-rule biofunction_buckets:
-    input:
-        gene_index =  data_dir + "/OT_data/gene_index.json",
-        go = data_dir + "/OT_spreadsheets/GO_Enriched_Terms_Lists.tsv",
-        react = data_dir + "/OT_spreadsheets/Reactome_Enriched_Terms_Lists.tsv",
-        sanger = data_dir + "/coreFitnessADAM_Sanger.txt",
-        broad = data_dir + "/coreFitnessADAM_Broad.txt",
-        bagel = data_dir + "/external_downloads/coreFitness_BAGEL.tsv",
-        ogee = data_dir + "/external_downloads/ogee_all.txt",
-        gene_mapfile = data_dir + "/OT_data/gene_mapfile.json"
-    output:
-        inter_dir + "/biofunction.json"
-    shell:
-        "python {source_dir}/bio_function_buckets.py -gene_index {input.gene_index} -go {input.go} -react {input.react} -sanger {input.sanger} -broad {input.broad} -bagel {input.bagel} -ogee {input.ogee} -gene_mapfile {input.gene_mapfile} -o {output}"
-
-#-------------------------------------------------------------------------------
-rule flag_essential_genes:
+rule essential_genes:
     input:
         sanger = data_dir + "/coreFitnessADAM_Sanger.txt",
         broad = data_dir + "/coreFitnessADAM_Broad.txt",
@@ -194,6 +179,16 @@ rule ogee_download:
         gzip -d {output}.gz
         """
 
+#===============================================================================
+rule pathways:
+    input:
+        gene_index =  data_dir + "/OT_data/gene_index.json",
+        go = data_dir + "/OT_spreadsheets/GO_Enriched_Terms_Lists.tsv",
+        react = data_dir + "/OT_spreadsheets/Reactome_Enriched_Terms_Lists.tsv",
+    output:
+        inter_dir + "/pathways.json"
+    shell:
+        "python {source_dir}/pathways.py -gene_index {input.gene_index} -go {input.go} -react {input.react} -o {output}"
 
 #-------------------------------------------------------------------------------
 rule flag_enriched_terms:
