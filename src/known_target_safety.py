@@ -2,7 +2,7 @@ import argparse
 import json
 from helpers import *
 
-def generate_known_safety_json(filename_adr,filename_sri,filename_ubr,filename_efo,filename_ref):
+def generate_known_safety_json(filename_adr,filename_sri,filename_ubr,filename_efo,filename_ref,gene_mapfile):
 
     # Reference info
     ref_links = {}
@@ -146,6 +146,10 @@ def generate_known_safety_json(filename_adr,filename_sri,filename_ubr,filename_e
 
             targets[target]["safety_risk_info"].append(inner)
 
+    # change gene names to ensembl ids to match the rest of the target safety data
+    hgnc_to_ensembl = Ensembl_from_HGNC(gene_mapfile)
+    targets = dict((hgnc_to_ensembl[key], value) for (key, value) in targets.items())
+
     return(targets)
 
 if __name__ == "__main__":
@@ -156,9 +160,11 @@ if __name__ == "__main__":
     parser.add_argument("-ubr","--uberon_mapping", help="tsv with uberon mapping for tissues in adverse effect and safety info spreadsheets", required=True)
     parser.add_argument("-efo","--efo_mapping", help="tsv with efo mapping for terms in adverse effect spreadsheet", required=True)
     parser.add_argument("-ref","--references", help="tsv with reference information for entries in adverse effect and safety info spreadsheets", required=True)
+    parser.add_argument("-gene_mapfile", help="Open Targets HGNC gene symbol to ENSEMBL gene id json file", required=True)
     parser.add_argument("-o","--output", help="Output json filename", required=True)
     args = parser.parse_args()
     print(args)
 
-    known_safety_per_target = generate_known_safety_json(args.adverse_effects,args.safety_risk_info,args.uberon_mapping,args.efo_mapping,args.references)
+    known_safety_per_target = generate_known_safety_json(args.adverse_effects,args.safety_risk_info,args.uberon_mapping,args.efo_mapping,args.references, args.gene_mapfile)
+
     write_json_file(known_safety_per_target,args.output)

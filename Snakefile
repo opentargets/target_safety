@@ -52,11 +52,12 @@ rule known_target_safety:
         sri = data_dir + "/OT_spreadsheets/known_safety_sri.tsv",
         ubr = data_dir + "/OT_spreadsheets/known_safety_ubr.tsv",
         efo = data_dir + "/OT_spreadsheets/known_safety_efo.tsv",
-        ref = data_dir + "/OT_spreadsheets/known_safety_ref.tsv"
+        ref = data_dir + "/OT_spreadsheets/known_safety_ref.tsv",
+        gene_mapfile = data_dir + "/OT_data/gene_mapfile.json"
     output:
         inter_dir + "/known_target_safety.json"
     shell:
-        "python {source_dir}/known_target_safety.py -adr {input.adr} -sri {input.sri} -ubr {input.ubr} -efo {input.efo} -ref {input.ref} -o {output}"
+        "python {source_dir}/known_target_safety.py -adr {input.adr} -sri {input.sri} -ubr {input.ubr} -efo {input.efo} -ref {input.ref} -gene_mapfile {input.gene_mapfile} -o {output}"
 
 rule known_target_safety_tables_download:
     params:
@@ -223,11 +224,12 @@ rule disease_associations:
     input:
         OT_associations = data_dir + "/OT_data/OT_associations.json",
         cosmic_evidence = data_dir + "/OT_data/cosmic_evidence.json",
-        rare = data_dir + "/rare_diseases.txt"
+        rare = data_dir + "/rare_diseases.txt",
+        EFO_mapfile = data_dir + "/OT_data/disease_mapfile.json"
     output:
         inter_dir + "/disease_associations.json"
     shell:
-        "python {source_dir}/disease_associations.py -OT_associations {input.OT_associations} -cosmic {input.cosmic_evidence} -rare {input.rare} -o {output}"
+        "python {source_dir}/disease_associations.py -OT_associations {input.OT_associations} -cosmic {input.cosmic_evidence} -rare {input.rare} -EFO_mapfile {input.EFO_mapfile} -o {output}"
 
 #-------------------------------------------------------------------------------
 rule rare_diseases:
@@ -317,6 +319,14 @@ rule gene_mapfile_download:
         location=config['gene_mapfile']
     output:
         data_dir + "/OT_data/gene_mapfile.json"
+    shell:
+        "gsutil cat {params.location} | gunzip | jq -c '.' > {output}"
+
+rule disease_mapfile_download:
+    params:
+        location=config['disease_mapfile']
+    output:
+        data_dir + "/OT_data/disease_mapfile.json"
     shell:
         "gsutil cat {params.location} | gunzip | jq -c '.' > {output}"
 

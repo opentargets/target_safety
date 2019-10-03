@@ -3,7 +3,7 @@ import json
 from helpers import *
 
 
-def get_assocs_info(associations_file,rare_diseases_list):
+def get_assocs_info(associations_file,rare_diseases_list,EFO_names):
 
 	with open(associations_file) as infile:
 		therapeutic_areas = {}
@@ -20,15 +20,15 @@ def get_assocs_info(associations_file,rare_diseases_list):
 				therapeutic_areas.setdefault(target,set()).update(thareas)
 
 				if disease in rare_diseases_list:
-					rare_disease_assocs.setdefault(target,[]).append(disease)
+					rare_disease_assocs.setdefault(target,[]).append({'code':disease,'label':EFO_names[disease]})
 
 		for target in therapeutic_areas:
-			therapeutic_areas[target] = list(therapeutic_areas[target])
+			therapeutic_areas[target] = [{'code':disease,'label':EFO_names[disease]} for disease in list(therapeutic_areas[target])]
 
 	return(therapeutic_areas,rare_disease_assocs)
 
 
-def get_cancer_genes(cosmic_evidence_file):
+def get_cancer_genes(cosmic_evidence_file,EFO_names):
 	with open(cosmic_evidence_file) as infile:
 		cosmic = {}
 		for line in infile:
@@ -41,8 +41,8 @@ def get_cancer_genes(cosmic_evidence_file):
 						  'inheritance_pattern':mut['inheritance_pattern']}
 						 for mut in entry['evidence']['known_mutations']]
 
-			cosmic.setdefault(target,{}).setdefault('tier',tier)
-			cosmic[target].setdefault('diseases',{}).setdefault(disease,[]).extend(mutations)
+			cosmic.setdefault(target,{'tier':tier,'evidence':[]})['evidence'].append({'disease_code':disease,'disease_label':EFO_names[disease],'known_mutations':mutations})
+
 	return(cosmic)
 
 def rare_diseases_from_file(rare_diseases_file):
@@ -59,17 +59,21 @@ if __name__ == "__main__":
 	parser.add_argument("-OT_associations", help="Open Targets associations filename.", required=True)
 	parser.add_argument("-cosmic", help="Latest COSMIC evidence file submitted to Open Targets.", required=True)
 	parser.add_argument("-rare","--rare_diseases", help="Text file with rare diseases list (EFO terms).", required=True)
+	parser.add_argument("-EFO_mapfile", help="Json file with disease terms and names.", required=True)
 	parser.add_argument("-o","--output", help="Output json filename", required=True)
 	args = parser.parse_args()
 
 	# read in rare diseases list
 	rare_diseases_list = rare_diseases_from_file(args.rare_diseases)
 
+	# dictionary with EFO labels to names
+	EFO_names = get_EFO_names(args.EFO_mapfile)
+
 	# get therapeutic areas and rare diseases for associations per target
-	therapeutic_areas,rare_disease_assocs = get_assocs_info(args.OT_associations,rare_diseases_list)
+	therapeutic_areas,rare_disease_assocs = get_assocs_info(args.OT_associations,rare_diseases_list,EFO_names)
 
 	# add cancer driver/suppressor info
-	cancer_genes = get_cancer_genes(args.cosmic)
+	cancer_genes = get_cancer_genes(args.cosmic,EFO_names)
 
 	# combine into a single output
 	combined = {'Info_D1:therapeutic_areas_high_assocs': therapeutic_areas,'Bucket_D1:rare_disease_high_assocs': rare_disease_assocs, 'Bucket_D2:cancer_genes': cancer_genes}

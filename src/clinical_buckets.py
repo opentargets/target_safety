@@ -12,9 +12,7 @@ def clinical_buckets(drug_index,known_safety_adr,known_safety_sri,known_safety_u
 	drug_label_info = collect_drug_label_info(drug_index,bbox_text=False)
 
 	# Get known target safety information
-	known_target_safety = generate_known_safety_json(known_safety_adr,known_safety_sri,known_safety_ubr,known_safety_efo,known_safety_ref)
-	hgnc_to_ensembl = Ensembl_from_HGNC(gene_mapfile)
-	known_target_safety = dict((hgnc_to_ensembl[key], value) for (key, value) in known_target_safety.items())
+	known_target_safety = generate_known_safety_json(known_safety_adr,known_safety_sri,known_safety_ubr,known_safety_efo,known_safety_ref,gene_mapfile)
 
 	# Get openFDA significant adverse event per target information
 	AEs_per_target = get_AEs_per_target(fda_aes_by_target)

@@ -28,6 +28,18 @@ def Ensembl_from_HGNC(mapfile):
 
 	return(hgnc_to_ensembl)
 
+def get_EFO_names(disease_mapfile):
+
+	import json
+
+	EFO_names = {}
+	with open(disease_mapfile) as map:
+		for line in map:
+			line = json.loads(line)
+			EFO_names[line['efo_id']] = line['disease_full_name']
+
+	return(EFO_names)
+
 # use if map file not available?
 def switch_to_EnsemblIDs(mydict, gene_index, type = 'from_symbols'):
 	# gene symbols for now, add whatever else is needed
