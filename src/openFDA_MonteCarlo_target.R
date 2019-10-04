@@ -2,6 +2,10 @@ library(data.table)
 library(tidyverse)
 library(jsonlite)
 
+# Takes as input a pre-processed json file with the openFDA adverse event data (FAERS)
+# and calculates the significance of each event occurring for each TARGET using a modified version of the openFDA's own LRT method (Monte Carlo simulations).
+# (https://openfda.shinyapps.io/LRTest/_w_c5c2d04d/lrtmethod.pdf)
+
 # Input files from command line arguments
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args)==0) {

@@ -7,6 +7,8 @@ from helpers import *
 # REPLACE WITH ChEMBL black box info when ready
 def get_black_box_warning_text(pref_drug_name):
 
+    # Queries openFDA API to get black box warnings where available for a given drug name
+
     import requests
 
     rfda = requests.get('https://api.fda.gov/drug/label.json?search=openfda.generic_name.exact:{}'.format(pref_drug_name))
@@ -20,14 +22,19 @@ def get_black_box_warning_text(pref_drug_name):
     return(black_box_text)
 
 # GET ALL SAFETY RELEVANT INFO FROM DRUG INDEX DATA DUMP
-def get_drug_info(drug_index, bbox_text):
+def get_drug_info(drug_index, bbox_text=False):
+
+    # Parses the Open Targets drug index to get the following information:
+    # (i) drugs per gene, (ii) max clinical trial phase,
+    # (iii) withdrawn info (iv) black box warning flags per drug.
+    # It can also query the openFDA API to retrieve the contents of the black box warning if available (defaults to FALSE).
+
     drug_annot = {}
     drugs_per_gene = {}
 
     with open(drug_index) as drugfile:
         for line in drugfile:
             annot = json.loads(line)
-            #annot = json.loads(line)['_source']
             drugid = annot['id']
             # get drugs per gene (DO NOT USE GENE INDEX FOR THIS, FAULTY DATA)
             mech = annot.get('mechanisms_of_action',[])
@@ -41,7 +48,7 @@ def get_drug_info(drug_index, bbox_text):
                     drugs_per_gene[t]=[]
                 drugs_per_gene[t].append(drugid)
 
-            # fill in drug annotation dict
+            # fill in drug annotation dict with any withdrawn info or black box warning flag
             name = annot.get('pref_name','')
             wdrawn = annot.get('withdrawn_flag',False)
             bbox = annot.get('black_box_warning',False)
@@ -67,51 +74,53 @@ def get_drug_info(drug_index, bbox_text):
         return(drug_annot,drugs_per_gene)
 
 
-def collect_drug_label_info(drug_index, bbox_text=True):
+def collect_drug_label_info(drug_index, bbox_text=False):
 
-	drug_annot,drugs_per_gene = get_drug_info(drug_index,bbox_text)
+    # Collects in json format the following information for each target:
+    # (i) number of drugs targeting this target in each clinical phase (using max_clinical_trial_phase),
+    # (ii) withdrawn drugs and
+    # (iii) black box warning info for drugs that target each target.
 
-	drug_label_info = {}
-	for gene in drugs_per_gene:
-		drug_label_info[gene]={}
-		drugs = list(set(drugs_per_gene[gene])) # drugs are duplicated if a target affected with more than one mechanism by the same drug
-		drug_table = [drug_annot.get(drugid,{}) for drugid in drugs]
-		df = pd.DataFrame(drug_table)
+    drug_annot,drugs_per_gene = get_drug_info(drug_index,bbox_text)
 
-		drug_label_info[gene]['Info:drug_phase_freq']=json.loads(df['max_clinical_trial_phase'].
-														value_counts().to_json())
+    drug_label_info = {}
+    for gene in drugs_per_gene:
+        drug_label_info[gene]={}
+        drugs = list(set(drugs_per_gene[gene])) # drugs are duplicated if a target affected with more than one mechanism by the same drug
+        drug_table = [drug_annot.get(drugid,{}) for drugid in drugs]
+        df = pd.DataFrame(drug_table)
 
-		wdrawn = json.loads(df.loc[df.withdrawn_flag == True][['id','pref_name','withdrawn_reason',
-															  'withdrawn_class',
-															  'withdrawn_country',
-															  'withdrawn_year']].
-							to_json(orient='records'))
-		if len(wdrawn):
-			drug_label_info[gene]['Bucket_C1:withdrawn_drugs'] = wdrawn
+        drug_label_info[gene]['Info:drug_phase_freq']=json.loads(df['max_clinical_trial_phase'].
+                                                        value_counts().to_json())
 
-		bbox = df.loc[df.black_box_warning == True]
-		if len(bbox.index):
+        wdrawn = json.loads(df.loc[df.withdrawn_flag == True][['id','pref_name','withdrawn_reason',
+                                                              'withdrawn_class',
+                                                              'withdrawn_country',
+                                                              'withdrawn_year']].
+                            to_json(orient='records'))
+        if len(wdrawn):
+            drug_label_info[gene]['Bucket_C1:withdrawn_drugs'] = wdrawn
 
-			if bbox_text:
-				# switch with column names for additional info here
-				bbox = json.loads(bbox[['id','pref_name','black_box_fda']].to_json(orient='records'))
-			else:
-				bbox = json.loads(bbox[['id','pref_name']].to_json(orient='records'))
+        bbox = df.loc[df.black_box_warning == True]
+        if len(bbox.index):
 
-			drug_label_info[gene]['Bucket_C2:black_box_drugs'] = bbox
+            if bbox_text:
+                # switch with column names for additional info here
+                bbox = json.loads(bbox[['id','pref_name','black_box_fda']].to_json(orient='records'))
+            else:
+                bbox = json.loads(bbox[['id','pref_name']].to_json(orient='records'))
 
-	#return(drug_label_info,drugs_per_gene)
-	return(drug_label_info)
+            drug_label_info[gene]['Bucket_C2:black_box_drugs'] = bbox
+
+    return(drug_label_info)
 
 
 if __name__ == "__main__":
 
-	parser = argparse.ArgumentParser()
-	parser.add_argument("-drug_index", help="Open Targets drug index contents", required=True)
-	parser.add_argument("-o","--output", help="Output json filename", required=True)
-	args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-drug_index", help="Open Targets drug index contents", required=True)
+    parser.add_argument("-o","--output", help="Output json filename", required=True)
+    args = parser.parse_args()
 
-
-	#drug_label_info,drugs_per_gene = collect_drug_label_info(drug_index_dump,bbox_text=False)
-	drug_label_info = collect_drug_label_info(args.drug_index,bbox_text=False)
-	write_json_file(drug_label_info,args.output)
+    drug_label_info = collect_drug_label_info(args.drug_index,bbox_text=False)
+    write_json_file(drug_label_info,args.output)

@@ -23,7 +23,7 @@ gcloud auth login
 1. For **complete output**, run:
 `snakemake` or `snakemake target_safety`
 
-This produces the Open Targets target safety annotation file called `target_safety.json` in the output folder. This json file includes all information collected for each of the OT safety buckets (short overview [here](https://drive.google.com/open?id=17XCLxzG5qSg_tgR3blwgwbKbPDxYRhpZN5OZ9rHKX4E)). It is produced by calling the script `target_safety.py` which merges the output from the six different scripts `clinical_buckets.py`, `tissue_expression.py`, `bio_function_buckets.py`, `disease_associations.py`, `animal_data.py` and `paralogues.py` into a single json that uses ENSEMBL gene ids as keys.   
+This produces the Open Targets target safety annotation file called `target_safety.json` in the output folder. This json file includes all information collected for each of the OT safety buckets (short overview [here](https://drive.google.com/open?id=17XCLxzG5qSg_tgR3blwgwbKbPDxYRhpZN5OZ9rHKX4E)). It is produced by calling the script `target_safety.py` which merges the output from the seven different scripts `clinical_buckets.py`, `tissue_expression.py`, `essential_genes.py`, `pathways.py`, `disease_associations.py`, `animal_data.py` and `paralogues.py` into a single json that uses ENSEMBL gene ids as keys.   
 
 2. To run **one** step specify that rule, e.g. for the `clinical_findings` step:
 ```
@@ -31,7 +31,7 @@ snakemake clinical_findings
 ```
 *(To list all available steps (rules): `snakemake --list`)*
 
-There are 6 main intermediate rules that produce corresponding json files in the intermediate output folder (define location in the configuration file `config.yaml`):
+There are 7 main intermediate rules that produce corresponding json files in the intermediate output folder (define location in the configuration file `config.yaml`):
 ```
 clinical_findings
 tissue_expression
@@ -79,7 +79,7 @@ potential_off_targets
   
 - `animal_data`
   
-  Calls the script `animal_data.py` to parse the OT gene index and extract the following information for the section "Model organisms and Comparative Genomics": (i) The mouse model MGI ids for any available knockout mouse models for this target, (ii) For which among the species among the 'clinically relevant species list' (currently *human, mouse, pig, dog, macaque, rat, guinea pig, rabbit and chimpanzee*; list needs refinement) do we have ortholog information already in Open Targets. 
+  Calls the script `animal_data.py` to parse the OT gene index and extract the following information for the section "Model organisms and Comparative Genomics": (i) The mouse model MGI ids for any available knockout mouse models for this target, (ii) For which species among the 'clinically relevant species list' (currently *human, mouse, pig, dog, macaque, rat, guinea pig, rabbit and chimpanzee*; list needs refinement) do we have ortholog information already in Open Targets. 
   
 - `potential_off_targets`
 

@@ -1,5 +1,8 @@
 library(data.table)
 
+# The following script is a copy of the demoScript.R of the AdAM repository
+# slightly modified to get the required input from the commandline arguments and write the output into a file.
+
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args)==0) {
   stop("The following arguments need to be supplied:\n1) ADAM repository folder (from https://github.com/francescojm/ADAM),\n2) binary dependency score matrix.\ne.g. Rscript run_ADAM.R src/ADAM binary_dep_scores.tsv", call.=FALSE)

@@ -4,6 +4,10 @@ from helpers import *
 
 if __name__ == '__main__':
 
+    # Merges the output from the seven different scripts:
+    # clinical_buckets.py, tissue_expression.py, essential_genes.py, pathways.py, disease_associations.py, animal_data.py and paralogues.py
+    # into a single json that uses ENSEMBL gene ids as keys.
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-clinical_findings", help="Target safety clinical_buckets.py output.", required=True)
     parser.add_argument("-tissue_expression", help="Target safety tissue_expression.py output.", required=True)

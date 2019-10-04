@@ -2,6 +2,9 @@ import argparse
 import requests
 
 def download_GoogleSpreadSheet(gkey,gid,output_filename):
+
+    # downloads provided Google Spreadsheet into a file in tsv format
+
     uri = "https://docs.google.com/spreadsheets/d/{}/export?format=tsv&gid={}".format(gkey,gid)
     response = requests.get(uri)
     with open(output_filename, mode='wb') as localfile:

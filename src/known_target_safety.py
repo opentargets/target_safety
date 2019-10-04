@@ -1,8 +1,10 @@
 import argparse
-import json
 from helpers import *
 
 def generate_known_safety_json(filename_adr,filename_sri,filename_ubr,filename_efo,filename_ref,gene_mapfile):
+
+    # Parses the manually curated spreadsheets (from OT google drive) with targets with known safety risk information
+    # and collects everything in the required json format (with Ensembl gene ids as primary keys)
 
     # Reference info
     ref_links = {}

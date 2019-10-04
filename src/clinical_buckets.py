@@ -1,5 +1,4 @@
 import argparse
-import json
 from helpers import *
 from drug_info import *
 from known_target_safety import *
@@ -7,6 +6,8 @@ from FDA_AEs_per_target import *
 
 
 def clinical_buckets(drug_index,known_safety_adr,known_safety_sri,known_safety_ubr,known_safety_efo,known_safety_ref,fda_aes_by_target,gene_mapfile):
+
+	# Collect clinical findings bucket info into a combined json file
 
 	# Get withdrawn drugs, black box warning, and drug phase frequency data
 	drug_label_info = collect_drug_label_info(drug_index,bbox_text=False)
@@ -37,7 +38,6 @@ if __name__ == "__main__":
 	parser.add_argument("-gene_mapfile", help="Open Targets HGNC gene symbol to ENSEMBL gene id json file", required=True)
 	parser.add_argument("-o","--output", help="Output json filename", required=True)
 	args = parser.parse_args()
-
 
 	clinical_findings = clinical_buckets(args.drug_index,args.adverse_effects,args.safety_risk_info,args.uberon_mapping,args.efo_mapping,args.references,args.fda_aes_by_target,args.gene_mapfile)
 	write_json_file(clinical_findings,args.output)

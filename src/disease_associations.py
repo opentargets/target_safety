@@ -5,6 +5,12 @@ from helpers import *
 
 def get_assocs_info(associations_file,rare_diseases_list,EFO_names):
 
+	# Parses the Open Targets associations file and the list of rare diseases (output from `rare_diseases.py`) to collect the following
+	# for diseases which are highly associated with each target
+	# (>= 0.75 overall association score, direct associations only):
+	# (i) therapeutic areas these diseases belong to,
+	# (ii) whether they are marked as a rare disease.
+
 	with open(associations_file) as infile:
 		therapeutic_areas = {}
 		rare_disease_assocs = {}
@@ -29,6 +35,10 @@ def get_assocs_info(associations_file,rare_diseases_list,EFO_names):
 
 
 def get_cancer_genes(cosmic_evidence_file,EFO_names):
+
+	# Parses the OT cosmic evidence file to flag targets that are marked as cancer genes from COSMIC
+	# and collects information on tier (COSMIC) and the known mutations per disease
+
 	with open(cosmic_evidence_file) as infile:
 		cosmic = {}
 		for line in infile:
@@ -46,6 +56,9 @@ def get_cancer_genes(cosmic_evidence_file,EFO_names):
 	return(cosmic)
 
 def rare_diseases_from_file(rare_diseases_file):
+
+	# Reads in rare diseases file into a list
+
 	rare_diseases_list = []
 	with open(rare_diseases_file,'r') as rarefile:
 		for line in rarefile:

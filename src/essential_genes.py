@@ -16,7 +16,16 @@ def consolidate(esslist):
 	    return(translate_ess_acronym[ess_types[0]])
 
 def consolidate_ogee_data(ogee_file):
-	# same as original consolidated file
+
+	# Consolidate OGEE results from different experiments
+	# Method:
+	# 1) map the multiple different flags from the different experiments into one of the following:
+	# 'Essential', 'Non-Essential', 'Fitness', 'Unknown'
+	# 2) For each gene: get list of (mapped) flags from the different experiments.
+	# If they are the same (e.g. all 'Essential') mark the gene with that flag.
+	# Otherwise, mark gene as 'Conditional'.
+	# In the end we are only keeping genes with the flags 'Essential' or 'Conditional'
+
 	ogee_df = pd.read_csv(ogee_file,sep='\t')
 	translate_essential_terms = {
 	    "NE": "NE",
@@ -51,30 +60,25 @@ def consolidate_ogee_data(ogee_file):
 
 def make_cf_dict(sangerfile,broadfile,bagelfile,ogeefile,hgnc_to_ensembl):
 
+	# Combines the lists of essential genes derived from the Cancer Dependency Map, the Toronto Knockout Library and OGEE.
+
+	# Cancer Dependency Map - Sanger file - output from AdAM
 	with open(sangerfile,'r') as sanger:
 		cf_sanger = sanger.read().splitlines()
 	# completely skipping over genes that are not mapped for now
 	cf_sanger = {hgnc_to_ensembl[hgnc]:{'core_fitness': 'Essential','ref_link':'https://score.depmap.sanger.ac.uk'} for hgnc in cf_sanger if hgnc in hgnc_to_ensembl}
 
+	# Cancer Dependency Map - Broad file - output from AdAM
 	with open(broadfile, 'r') as broad:
 		cf_broad = broad.read().splitlines()
 	cf_broad = {hgnc_to_ensembl[hgnc]:{'core_fitness': 'Essential','ref_link':'https://score.depmap.sanger.ac.uk'} for hgnc in cf_broad if hgnc in hgnc_to_ensembl}
 
+	# Toronto Knockout Library (BAGEL) - download
 	with open(bagelfile, 'r') as bagel:
 		cf_bagel = [line.split()[0] for line in bagel]
 	cf_bagel = {hgnc_to_ensembl[hgnc]:{'core_fitness': 'Essential','ref_link':'http://tko.ccbr.utoronto.ca'} for hgnc in cf_bagel if hgnc in hgnc_to_ensembl}
 
-	# with open(ogeefile, 'r') as ogee:
-	# 	cf_ogee = {}
-	# 	for line in ogee:
-	# 		line = line.strip().split(',')
-	# 		flag = line[-1]
-	# 		if flag != 'Nonessential': # we are including 'Conditional' information
-	# 			cf_ogee[line[0]] = {'core_fitness': flag, 'ref_link':'http://ogee.medgenius.info/browse'}
-
-
-
-		#cf_ogee = [hgnc_to_ensembl[hgnc] for hgnc in cf_bagel if hgnc in hgnc_to_ensembl]
+	# OGEE essential genes - Consolidated results from different experiments in the same way as in the OGEE website
 	cf_ogee = consolidate_ogee_data(ogeefile)
 
 	combined = {'Sanger': cf_sanger,'Broad': cf_broad, 'BAGEL': cf_bagel, 'OGEE': cf_ogee}

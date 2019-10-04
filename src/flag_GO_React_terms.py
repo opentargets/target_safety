@@ -1,16 +1,16 @@
 import argparse
-import pandas as pd
-import json
 from helpers import *
 
 
 
 def collect_terms(flagged_terms_tsv):
 
+	# reads in table with flagged GO and Reactome terms associated with safety issues (from GSE currently)
+
 	import pandas as pd
 
 	df = pd.read_csv(flagged_terms_tsv,sep='\t')
-	header = list(df.columns)
+	header = list(df.columns) # save column headers for naming the dictionary keys later on
 
 	terms = []
 	for col in header:
@@ -19,6 +19,8 @@ def collect_terms(flagged_terms_tsv):
 	return(header,terms)
 
 def flag_genes(gene_index, flagged_GO_terms_tsv, flagged_Reactome_terms_tsv):
+
+	# Parses the OT gene index to flag a gene if it is annotated with one of the GO or Reactome flagged terms
 
 	import json
 
@@ -29,7 +31,6 @@ def flag_genes(gene_index, flagged_GO_terms_tsv, flagged_Reactome_terms_tsv):
 	with open(gene_index) as genefile:
 		for line in genefile:
 			annot = json.loads(line)
-			#annot = json.loads(line)['_source'] 
 			ensembl_id = annot['ensembl_gene_id']
 
 			# GO terms

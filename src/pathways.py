@@ -1,10 +1,12 @@
-import json
 from helpers import *
 from flag_GO_React_terms import *
 
 
 
 if __name__ == "__main__":
+
+	# Merges collected information on processes or pathways that a target is involved in
+	# that might be relevant to its safety as a drug target
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-gene_index", help="Open Targets gene index contents", required=True)
