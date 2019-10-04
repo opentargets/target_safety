@@ -20,8 +20,8 @@ if __name__ == "__main__":
 
 	# Add AOP data here (& anything else pathway-related) and then in the combined dictionary.
 
-	# Combine the above into biological function json safety information.
+	# Combine the above into pathways json safety information.
 	combined = {'Bucket_P1:flagged_GO_or_Reactome_term': flagged_genes}
-	biological_function_buckets = combine_dicts_genekey(combined)
+	pathways = combine_dicts_genekey(combined)
 
-	write_json_file(biological_function_buckets,args.output)
+	write_json_file(pathways,args.output)
